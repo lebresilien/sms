@@ -1,8 +1,21 @@
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
+import useAuth from '../../hooks/useAuth';
+import { FormEvent } from 'react';
 
 const SignIn = () => {
+
+  const { login, loading, error } = useAuth();
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    login(formData.get("email") as string, formData.get("password") as string);
+  }
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -150,13 +163,16 @@ const SignIn = () => {
                 Se connecter à SmsBulk
               </h2>
 
-              <form>
+              {error && <p className="my-5 text-red-300">Bad login/password</p>}
+
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
                   </label>
                   <div className="relative">
                     <input
+                      name="email"
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -188,6 +204,7 @@ const SignIn = () => {
                   </label>
                   <div className="relative">
                     <input
+                      name="password"
                       type="password"
                       placeholder="Mot de passe"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -219,6 +236,7 @@ const SignIn = () => {
 
                 <div className="mb-5">
                   <input
+                    disabled={loading}
                     type="submit"
                     value="Se connecter"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"

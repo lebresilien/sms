@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useAuth();
+  let navigate = useNavigate();
+
+  useEffect(() => { 
+    if(!user) return navigate("/auth/signin");
+  },[user]);
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
